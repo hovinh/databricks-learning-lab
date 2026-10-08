@@ -1,0 +1,6 @@
+release: release_20261006_init
+scripts:
+  - schemas/taxi.sql
+  - tables/taxi_features.sql
+  - tables/taxi_predictions.sql
+  - views/vw_latest_predictions.sql

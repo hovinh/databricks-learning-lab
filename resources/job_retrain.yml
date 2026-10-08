@@ -1,0 +1,27 @@
+resources:
+  jobs:
+    taxi_retrain:
+      name: taxi_retrain
+      description: Weekly. Trains on the latest feature batches and promotes the result to @champion.
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: train
+          environment_key: ml_env
+          spark_python_task:
+            python_file: ${workspace.file_path}/ml/pipelines/train.py
+            parameters: [--catalog, "${var.catalog}", --schema, "${var.schema}"]
+      environments:
+        - environment_key: ml_env
+          spec:
+            environment_version: ${var.environment_version}
+            dependencies: ${var.ml_dependencies}
+      schedule:
+        quartz_cron_expression: "0 0 5 ? * MON"
+        timezone_id: UTC
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      queue:
+        enabled: true
+      tags:
+        project: nyc_taxi

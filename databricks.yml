@@ -1,0 +1,47 @@
+bundle:
+  name: nyc_taxi
+
+include:
+  - resources/*.yml
+
+sync:
+  exclude:
+    - ml/data/**
+    - ml/logs/**
+    - references/**
+
+variables:
+  catalog:
+    description: Catalog holding the project schema
+    default: workspace
+  schema:
+    description: Schema for this target's tables and model
+    default: taxi_dev
+  environment_version:
+    description: Serverless environment version; must run the same Python as the local venv (3.12)
+    default: "5"
+  ml_dependencies:
+    description: Libraries for the ML tasks. Keep in sync with ml/requirements.in.
+    type: complex
+    default:
+      - pandas==2.3.3
+      - numpy==2.5.1
+      - lightgbm==4.7.0
+      - mlflow==3.15.1
+
+targets:
+  dev:
+    default: true
+    mode: development
+    # workspace:
+    #   host: https://<your-workspace-host>   # optional; otherwise taken from the CLI profile
+
+  prd:
+    mode: production
+    variables:
+      schema: taxi_prd
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: ${workspace.current_user.userName}
+        level: CAN_MANAGE

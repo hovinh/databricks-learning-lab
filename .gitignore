@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.databricks/
+ml/data/
+ml/logs/
+ml/config.local.json
+resources/*.local.yml
+references/

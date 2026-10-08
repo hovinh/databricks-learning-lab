@@ -1,0 +1,38 @@
+resources:
+  jobs:
+    sql_release:
+      name: sql_release
+      description: Manual. Runs a SQL release manifest (sql/releases/*.yaml) against this target's schema.
+      max_concurrent_runs: 1
+      parameters:
+        - name: release_file
+          default: ""
+        - name: dry_run
+          default: "false"
+      tasks:
+        - task_key: run_sql_release
+          environment_key: sql_env
+          spark_python_task:
+            python_file: ${workspace.file_path}/sql/runner/run_sql_release.py
+            parameters:
+              - --release-file
+              - "{{job.parameters.release_file}}"
+              - --sql-root
+              - ${workspace.file_path}/sql
+              - --catalog
+              - ${var.catalog}
+              - --schema
+              - ${var.schema}
+              - --dry-run
+              - "{{job.parameters.dry_run}}"
+      environments:
+        - environment_key: sql_env
+          spec:
+            environment_version: ${var.environment_version}
+            dependencies:
+              - pyyaml==6.0.3
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      tags:
+        project: nyc_taxi

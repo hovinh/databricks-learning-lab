@@ -1,0 +1,40 @@
+resources:
+  jobs:
+    taxi_predict:
+      name: taxi_predict
+      description: Daily. Builds features for the next simulated day, then scores them with the champion model.
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: feature_engineering
+          environment_key: ml_env
+          spark_python_task:
+            python_file: ${workspace.file_path}/ml/pipelines/feature_engineering.py
+            parameters: [--catalog, "${var.catalog}", --schema, "${var.schema}"]
+        - task_key: predict
+          depends_on:
+            - task_key: feature_engineering
+          environment_key: ml_env
+          spark_python_task:
+            python_file: ${workspace.file_path}/ml/pipelines/predict.py
+            parameters:
+              - --catalog
+              - ${var.catalog}
+              - --schema
+              - ${var.schema}
+              - --batch-id
+              - "{{tasks.feature_engineering.values.batch_id}}"
+      environments:
+        - environment_key: ml_env
+          spec:
+            environment_version: ${var.environment_version}
+            dependencies: ${var.ml_dependencies}
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: UTC
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      queue:
+        enabled: true
+      tags:
+        project: nyc_taxi
