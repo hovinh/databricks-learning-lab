@@ -8,3 +8,6 @@ ml/logs/
 ml/config.local.json
 resources/*.local.yml
 references/
+CLAUDE.local.md
+ml/mlflow.db
+ml/mlruns/

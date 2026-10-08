@@ -40,6 +40,11 @@ targets:
     mode: production
     variables:
       schema: taxi_prd
+    # The demo's source data is static: active prd schedules would advance the
+    # simulated clock unattended and fail daily once it runs out. Deploy paused;
+    # trigger runs by hand. A UI pause would be undone by the next deploy.
+    presets:
+      trigger_pause_status: PAUSED
     workspace:
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
     permissions:
