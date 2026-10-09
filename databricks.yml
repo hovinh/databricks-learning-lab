@@ -18,8 +18,8 @@ variables:
     description: Schema for this target's tables and model
     default: taxi_dev
   environment_version:
-    description: Serverless environment version; must run the same Python as the local venv (3.12)
-    default: "5"
+    description: Serverless environment version; "4" = Python 3.12 + Databricks Connect 17.3, matching ml/requirements.in
+    default: "4"
   ml_dependencies:
     description: Libraries for the ML tasks. Keep in sync with ml/requirements.in.
     type: complex
