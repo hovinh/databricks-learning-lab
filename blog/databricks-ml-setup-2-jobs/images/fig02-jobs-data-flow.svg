@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="360" fill="#ffffff"/>
+
+  <!-- Top row: source -> FE -> features -> predict -> predictions -->
+  <rect x="20" y="110" width="150" height="46" rx="4" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="95" y="130" text-anchor="middle" fill="#0f172a" font-size="12">samples.nyctaxi.trips</text>
+  <text x="95" y="147" text-anchor="middle" fill="#64748b" font-size="11">source, read-only</text>
+
+  <rect x="220" y="110" width="150" height="46" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="295" y="138" text-anchor="middle" fill="#1e3a8a">feature_engineering</text>
+
+  <rect x="420" y="110" width="150" height="46" rx="4" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="495" y="138" text-anchor="middle" fill="#0f172a">taxi_features</text>
+
+  <rect x="620" y="110" width="150" height="46" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="695" y="138" text-anchor="middle" fill="#1e3a8a">predict</text>
+
+  <rect x="820" y="110" width="160" height="46" rx="4" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="900" y="138" text-anchor="middle" fill="#0f172a">taxi_predictions</text>
+
+  <!-- Bottom row: train -> model; view -->
+  <rect x="420" y="240" width="150" height="46" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="495" y="268" text-anchor="middle" fill="#14532d">train</text>
+
+  <rect x="620" y="240" width="150" height="46" rx="4" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="695" y="260" text-anchor="middle" fill="#0f172a">taxi_fare_model</text>
+  <text x="695" y="277" text-anchor="middle" fill="#64748b" font-size="12">@champion</text>
+
+  <rect x="820" y="240" width="160" height="46" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-dasharray="4 3"/>
+  <text x="900" y="260" text-anchor="middle" fill="#0f172a" font-size="12">vw_latest_predictions</text>
+  <text x="900" y="277" text-anchor="middle" fill="#64748b" font-size="11">predicted vs actual</text>
+
+  <!-- Arrows, top row -->
+  <line x1="170" y1="133" x2="217" y2="133" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="370" y1="133" x2="417" y2="133" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="395" y="174" text-anchor="middle" fill="#475569" font-size="11">write_batch</text>
+  <line x1="570" y1="133" x2="617" y2="133" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="595" y="174" text-anchor="middle" fill="#475569" font-size="11">one batch</text>
+  <line x1="770" y1="133" x2="817" y2="133" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="795" y="174" text-anchor="middle" fill="#475569" font-size="11">write_batch</text>
+
+  <!-- Task value arc -->
+  <path d="M295,108 C295,40 695,40 695,105" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-blue)"/>
+  <text x="495" y="50" text-anchor="middle" fill="#2563eb" font-size="12">task value: batch_id</text>
+
+  <!-- Vertical arrows -->
+  <line x1="495" y1="156" x2="495" y2="237" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="503" y="205" fill="#475569" font-size="11">last 28 batches</text>
+  <line x1="570" y1="263" x2="617" y2="263" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="594" y="304" text-anchor="middle" fill="#475569" font-size="11">register + alias</text>
+  <line x1="695" y1="240" x2="695" y2="159" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="703" y="205" fill="#475569" font-size="11">load @champion</text>
+  <line x1="900" y1="156" x2="900" y2="237" stroke="#334155" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="908" y="198" fill="#475569" font-size="11">joined with</text>
+  <text x="908" y="212" fill="#475569" font-size="11">features</text>
+
+  <!-- Legend -->
+  <rect x="20" y="320" width="14" height="14" rx="3" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="42" y="332" fill="#334155" font-size="12">taxi_predict job (daily)</text>
+  <rect x="210" y="320" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="232" y="332" fill="#334155" font-size="12">taxi_retrain job (weekly)</text>
+  <rect x="410" y="320" width="14" height="14" rx="2" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="432" y="332" fill="#334155" font-size="12">Unity Catalog object (table, model, view)</text>
+</svg>

@@ -9,6 +9,7 @@ sync:
     - ml/data/**
     - ml/logs/**
     - references/**
+    - blog/**
 
 variables:
   catalog:

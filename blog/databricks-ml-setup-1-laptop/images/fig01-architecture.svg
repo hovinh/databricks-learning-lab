@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <rect width="760" height="360" fill="#ffffff"/>
+
+  <!-- Laptop -->
+  <rect x="20" y="30" width="210" height="300" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="125" y="56" text-anchor="middle" font-weight="bold" fill="#1e3a8a">Laptop</text>
+  <rect x="40" y="150" width="170" height="70" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="125" y="180" text-anchor="middle" fill="#0f172a">IDE + venv</text>
+  <text x="125" y="199" text-anchor="middle" fill="#475569" font-size="12">plain Python, pinned deps</text>
+
+  <!-- Workspace -->
+  <rect x="330" y="30" width="410" height="300" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="535" y="56" text-anchor="middle" font-weight="bold" fill="#0f172a">Databricks workspace</text>
+
+  <rect x="350" y="80" width="170" height="50" rx="8" fill="#ffffff" stroke="#334155"/>
+  <text x="435" y="102" text-anchor="middle" fill="#0f172a">Workspace files</text>
+  <text x="435" y="119" text-anchor="middle" fill="#0f172a">+ Jobs</text>
+
+  <rect x="350" y="200" width="170" height="50" rx="8" fill="#ffffff" stroke="#334155"/>
+  <text x="435" y="230" text-anchor="middle" fill="#0f172a">Serverless compute</text>
+
+  <rect x="560" y="140" width="165" height="50" rx="8" fill="#ffffff" stroke="#334155"/>
+  <text x="642" y="162" text-anchor="middle" fill="#0f172a">Unity Catalog</text>
+  <text x="642" y="179" text-anchor="middle" fill="#0f172a">tables</text>
+
+  <rect x="560" y="255" width="165" height="56" rx="8" fill="#ffffff" stroke="#334155"/>
+  <text x="642" y="278" text-anchor="middle" fill="#0f172a">MLflow tracking +</text>
+  <text x="642" y="296" text-anchor="middle" fill="#0f172a">UC model registry</text>
+
+  <!-- Laptop -> workspace -->
+  <line x1="210" y1="165" x2="347" y2="110" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="262" y="122" text-anchor="middle" fill="#2563eb" font-size="12">bundle deploy</text>
+
+  <line x1="210" y1="190" x2="347" y2="222" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="290" y="187" text-anchor="middle" fill="#2563eb" font-size="12">Databricks Connect</text>
+
+  <line x1="210" y1="212" x2="557" y2="288" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="300" y="262" text-anchor="middle" fill="#2563eb" font-size="12">MLflow REST</text>
+
+  <!-- Inside the workspace -->
+  <line x1="435" y1="130" x2="435" y2="197" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="443" y="168" fill="#475569" font-size="12">jobs run on</text>
+
+  <line x1="522" y1="213" x2="557" y2="180" stroke="#334155" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <line x1="522" y1="238" x2="557" y2="272" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+</svg>
