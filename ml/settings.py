@@ -10,7 +10,7 @@ from typing import Optional
 
 ML_ROOT = Path(__file__).resolve().parent
 
-# Local-only paths (Stage 0 data, debug snapshots, local model). Gitignored.
+# Local-only paths (Stage 1 data, debug snapshots, local model). Gitignored.
 DATA_DIR = ML_ROOT / "data"
 RAW_DIR = DATA_DIR / "01_raw"
 LOCAL_SOURCE_PATH = RAW_DIR / "source_trips.parquet"

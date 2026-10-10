@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 def train(env, end_batch_id: Optional[int] = None) -> str:
     """Trains on the TRAIN_WINDOW_DAYS batches ending at end_batch_id (default:
     the latest), then registers + promotes (uc) or saves locally (local).
-    Returns the model version ("local" in Stage 0)."""
+    Returns the model version ("local" in Stage 1)."""
     if end_batch_id is None:
         end_batch_id = connect.read_latest_batch_id(env, settings.FEATURES_TABLE)
     if end_batch_id is None:

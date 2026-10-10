@@ -1,6 +1,6 @@
 # Run from ml/: python -m scripts.export_source
 """Copies the whole source table to ml/data/01_raw/source_trips.parquet: the
-"extract you were given" that Stage 0 (data_source=local) runs on."""
+"extract you were given" that Stage 1 (data_source=local) runs on."""
 
 import connect
 import settings

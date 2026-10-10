@@ -1,9 +1,9 @@
-# Screenshot shot list (Part 1)
+# Screenshot shot list
 
-Two UI screenshots are missing from the post. Each one has a placeholder marked by a
+Four UI screenshots are missing from the post. Each one has a placeholder marked by a
 `<!-- TODO(screenshot) -->` comment.
 
-## General rules (same for Part 2)
+## General rules
 
 - **Folder:** this post's `images/`, saved under the exact file name below (the post already
   links to it).
@@ -11,10 +11,11 @@ Two UI screenshots are missing from the post. Each one has a placeholder marked 
   part of the page that matters, without the browser chrome.
 - **After saving**, set the figure's `{:data-width="..." data-height="..."}` in the post to the
   PNG's real pixel size. The placeholders say 1440 x 900.
-- **Sanitise** (Appendix B of the skeleton). Blur or crop out:
+- **Sanitise.** Blur or crop out:
   - the workspace URL / host (address bar, any links)
   - workspace, metastore and account IDs; run and experiment IDs in URLs or breadcrumbs
-  - your email or user name, including the "Created by" / "Registered by" / "Owner" fields
+  - your email or user name, including the "Created by" / "Registered by" / "Owner" fields,
+    and the user-name part of every `[dev <user>]` job prefix (keep the `[dev ` bracket visible)
 - Use the **dev** objects (`taxi_dev`).
 
 ## Fig. 4: `fig04-mlflow-run.png` (MLflow run)
@@ -33,3 +34,20 @@ Two UI screenshots are missing from the post. Each one has a placeholder marked 
 2. Capture the versions list with the **aliases** column showing `@champion` on the latest
    version (several versions in view is better: it shows that each retrain adds one).
 3. Blur: owner / "Registered by", and the source run links if they expose IDs.
+
+## Fig. 7: `fig07-job-run-dag.png` (job run graph)
+
+1. Sidebar: **Jobs & Pipelines** -> `[dev <user>] taxi_predict` -> **Runs**.
+2. Open a successful run and switch to the **graph** view: `feature_engineering` -> `predict`,
+   both green.
+3. Optional: click `predict` so the side panel shows its parameters, including the resolved
+   `--batch-id` (the task value).
+4. Blur: the user name in the job name, and the run ID / URL.
+
+## Fig. 8: `fig08-jobs-list-dev-prefix.png` (jobs list)
+
+1. Sidebar: **Jobs & Pipelines**, filter by `taxi`.
+2. Capture the list showing the three `[dev <user>] ...` jobs. If the prd jobs are deployed,
+   keep them in the same shot: real names with no prefix and a **Paused** trigger, next to the
+   dev ones. That makes the development-mode point by itself.
+3. Blur the user-name part of each `[dev ...]` prefix.

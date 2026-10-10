@@ -1,4 +1,4 @@
-"""Local model files, for Stage 0 (data_source=local) only."""
+"""Local model files, for Stage 1 (data_source=local) only."""
 
 from pathlib import Path
 

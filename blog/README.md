@@ -7,12 +7,11 @@ figures in `images/`.
 
 | Folder | Status | Covers |
 |---|---|---|
-| `databricks-ml-setup-1-laptop/` | full draft (2026-10-09); 2 screenshots pending (`screenshots.md`) | Part 1: versions, auth, pip-tools, layering rule, three stages, helpers, offline tests, MLflow + UC registry |
-| `databricks-ml-setup-2-jobs/` | full draft (2026-10-09); 2 screenshots pending (`screenshots.md`) | Part 2: Asset Bundles, after-deploy gotchas, SQL release runner, rerunnable batch pipelines, multi-environment + service principals |
+| `databricks-ml-setup/` | full draft (2026-10-10, replaces the two-part draft of 2026-10-09); 4 screenshots pending (`screenshots.md`) | Prototype to scheduled job in three stages: plain Python prototype, Databricks concepts + working config, layering rule + `Env`, MLflow + UC registry, hybrid via Connect, offline tests, Asset Bundles, SQL release runner, four environments + service principals |
 
 ## Candidate topics
 
-Upgrade paths the databricks-ml-setup series names but doesn't cover:
+Upgrade paths the databricks-ml-setup post names but doesn't cover:
 
 - Wheel packaging with bundle `artifacts` + `python_wheel_task` (removes the `__file__` bootstrap).
 - Champion/challenger promotion: only move `@champion` when the new version wins on the same test window.
