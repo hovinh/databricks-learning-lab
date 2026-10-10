@@ -7,7 +7,7 @@ figures in `images/`.
 
 | Folder | Status | Covers |
 |---|---|---|
-| `databricks-ml-setup/` | full draft (2026-10-10, replaces the two-part draft of 2026-10-09); 4 screenshots pending (`screenshots.md`) | Prototype to scheduled job in three stages: plain Python prototype, Databricks concepts + working config, layering rule + `Env`, MLflow + UC registry, hybrid via Connect, offline tests, Asset Bundles, SQL release runner, four environments + service principals |
+| `databricks-ml-setup/` | full draft (2026-10-10, replaces the two-part draft of 2026-10-09); all 9 figures in place as PNG (SVG sources kept in `images/`) | Prototype to scheduled job in three stages: plain Python prototype, Databricks concepts + working config, layering rule + `Env`, MLflow + UC registry, hybrid via Connect, offline tests, Asset Bundles, SQL release runner, four environments + service principals |
 
 ## Candidate topics
 

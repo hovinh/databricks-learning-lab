@@ -35,7 +35,7 @@ This post walks through that journey on **Databricks**, with a development flow 
 2. **Hybrid.** Code still on the laptop, in your IDE with your debugger, but reading and writing real tables in Databricks.
 3. **Remote.** The same files deployed as scheduled jobs on Databricks, with nobody at the keyboard.
 
-![Fig01](images/fig01-three-stages.svg){:data-width="760" data-height="300"}
+![Fig01](images/fig01-three-stages.png){:data-width="1520" data-height="600"}
 Fig. 1. The three stages. Stage 1 runs entirely on the laptop with local files. Stage 2 runs the code locally against real Unity Catalog (UC) tables and the UC model registry through Databricks Connect. Stage 3 runs the same files as a serverless job. Once the code is structured for it (Stage 2), a command-line switch picks between Stage 1 and Stage 2, and a deploy gives you Stage 3.
 {:.figure}
 
@@ -51,7 +51,7 @@ Databricks notebooks are a lovely place to *explore* data: the compute is alread
 
 ### The data and the model
 
-Imagine the data isn't in Databricks yet, a common situation early on: someone has sent you an extract. Here, that's a parquet copy of `samples.nyctaxi.trips`: 21,932 trips over 60 days, from 2016-01-01 to 2016-02-29, each with pickup and dropoff times, zip codes, distance and fare. (One day stands out: 2016-01-23 has only 78 trips against roughly 350 on a normal day. That's the January 2016 blizzard, visible in a sample table.)
+Imagine the data isn't in Databricks yet, a common situation early on: someone has sent you an extract. Here, that's a parquet copy of `samples.nyctaxi.trips`: 21,932 trips over 60 days, from 2016-01-01 to 2016-02-29, each with pickup and dropoff times, zip codes, distance and fare.
 
 The prototype is three small scripts, and the snippets below are simplified from the real code to show only the core idea. One concept shapes all of them: the **batch**. The final system will predict one day of trips at a time, so every row carries a `batch_id` (the day as `yyyyMMdd`), and every step works batch by batch.
 
@@ -199,7 +199,7 @@ Before moving to Stage 2, it helps to know what each Databricks piece does, beca
 
 **Service principal.** A non-human identity in the workspace, with its own permissions. Production jobs usually run *as* a service principal rather than as the developer who deployed them, so they don't depend on one person's account or grants. It comes back in the last section.
 
-![Fig02](images/fig02-architecture.svg){:data-width="760" data-height="360"}
+![Fig02](images/fig02-architecture.png){:data-width="1520" data-height="720"}
 Fig. 2. How the pieces connect. From the laptop, Databricks Connect sends Spark work to serverless compute, MLflow talks to the tracking server and the UC model registry over REST, and `bundle deploy` uploads the same code as workspace files plus job definitions. The jobs then run on the same serverless compute.
 {:.figure}
 
@@ -258,7 +258,7 @@ We could go hybrid the obvious way: replace every `pd.read_parquet(...)` in the 
 - **Entry points.** `pipelines/feature_engineering.py`, `train.py` and `predict.py` wire the logic to the boundaries. They're what the jobs will run.
 - **An explicit environment object.** Every boundary call receives an `Env` that says where to read and write.
 
-![Fig03](images/fig03-layering.svg){:data-width="760" data-height="400"}
+![Fig03](images/fig03-layering.png){:data-width="1520" data-height="800"}
 Fig. 3. The layering rule. Pipelines call the pure logic and the two boundary modules, and only the boundaries reach Databricks. Tests replace the boundaries with mocks (red line), so everything above it runs offline. `settings.Env` travels with every boundary call.
 {:.figure}
 
@@ -433,13 +433,11 @@ def load_champion(env):
     return model, str(version)
 ```
 
-<!-- TODO(screenshot): fig04-mlflow-run.png, see screenshots.md -->
-![Fig04](images/fig04-mlflow-run.png){:data-width="1440" data-height="900"}
-Fig. 4. A training run in the MLflow experiment. The parameters include the data provenance (`data_table`, `data_start_batch_id`, `data_end_batch_id`, `data_table_version`), and the metrics put the model's `mae` next to the zip-pair `baseline_mae`.
+![Fig04](images/fig04-mlflow-run.png){:data-width="1324" data-height="1125"}
+Fig. 4. A training run in the MLflow experiment `/Shared/nyc_taxi_taxi_dev`. The run registered version 3 of `workspace.taxi_dev.taxi_fare_model`, and its metrics put the model's `mae` next to the zip-pair `baseline_mae`. The parameters (17 in total) include the LightGBM settings, the target schema and the data provenance.
 {:.figure}
 
-<!-- TODO(screenshot): fig05-model-version-champion.png, see screenshots.md -->
-![Fig05](images/fig05-model-version-champion.png){:data-width="1440" data-height="900"}
+![Fig05](images/fig05-model-version-champion.png){:data-width="736" data-height="412"}
 Fig. 5. The registered model in Unity Catalog. Each retrain adds a version, and the `champion` alias points at the one the predict pipeline loads.
 {:.figure}
 
@@ -625,7 +623,7 @@ The pure logic needs no mocks at all, and `Env(data_source="local")` pointed at 
 
 Stages 1 and 2 still need someone at the keyboard. Stage 3 deploys the same files as **jobs** that run on a schedule, and it does that with **Databricks Asset Bundles**<sup><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/">(2)</a></sup>: the jobs are YAML files in the repo, reviewed like code and deployed with one command. (The current docs have renamed them Declarative Automation Bundles; the CLI command is still `databricks bundle`.)
 
-![Fig06](images/fig06-jobs-data-flow.svg){:data-width="1000" data-height="360"}
+![Fig06](images/fig06-jobs-data-flow.png){:data-width="2000" data-height="720"}
 Fig. 6. The two scheduled jobs and the data they move. The daily `taxi_predict` job builds one batch of features and hands its `batch_id` to the predict task. The weekly `taxi_retrain` job trains on the last 28 batches and moves the `@champion` alias. A view joins the latest predictions to the actual fares.
 {:.figure}
 
@@ -753,14 +751,12 @@ databricks bundle deploy -t prd
 - **`run <job>`** triggers a job and follows it until it finishes. `--params` sets job parameters for that one run.
 - **`summary`** lists what's deployed for the target, with links.
 
-<!-- TODO(screenshot): fig07-job-run-dag.png, see screenshots.md -->
-![Fig07](images/fig07-job-run-dag.png){:data-width="1440" data-height="900"}
+![Fig07](images/fig07-job-run-dag.png){:data-width="1648" data-height="977"}
 Fig. 7. A run of the `taxi_predict` job: the `feature_engineering` task, then `predict`, which depends on it and receives its `batch_id` as a task value.
 {:.figure}
 
-<!-- TODO(screenshot): fig08-jobs-list-dev-prefix.png, see screenshots.md -->
-![Fig08](images/fig08-jobs-list-dev-prefix.png){:data-width="1440" data-height="900"}
-Fig. 8. The jobs list after a dev deploy. Development mode prefixes every job with `[dev <user>]`, so personal deployments never collide with the real `prd` jobs.
+![Fig08](images/fig08-jobs-list-dev-prefix.png){:data-width="1651" data-height="862"}
+Fig. 8. The jobs list after deploying both targets. Development mode prefixes every dev job with `[dev <user>]`, so personal deployments never collide with the real `prd` jobs below them. Both sets of schedules show as paused: dev by development mode, prd by the `trigger_pause_status` preset.
 {:.figure}
 
 ### The one thing that differs in a job
@@ -784,6 +780,8 @@ It's a hack, and a clean alternative exists: package the code as a wheel and run
 
 The bundle deploys code and jobs. It does not create the project's tables, and that's deliberate.
 
+Tables are created with **DDL** (Data Definition Language): the SQL statements that define objects rather than the rows in them, such as `CREATE SCHEMA`, `CREATE TABLE`, `ALTER TABLE`, `CREATE VIEW` and `DROP`. This project's DDL defines one schema per environment, two tables (`taxi_features`, written by the feature pipeline, and `taxi_predictions`, written by the predict pipeline) and one view that joins the latest predictions to the actual fares. The pipelines only ever write *rows* into those tables. Creating or changing the tables themselves is a separate step, and this section is about doing that step safely.
+
 ### Why tables can't be deployed like code
 
 A deploy **replaces code** every time, which is safe because code holds no state. **Tables hold data.** "Redeploying" a table by dropping and recreating it destroys the data. Bundles manage jobs, files and some UC objects, but **not table DDL** (`databricks bundle schema` on CLI v1.20.0 lists 38 resource types, including schemas, volumes and registered models, and no tables).
@@ -795,7 +793,7 @@ So tables need their own deployment path, and it has to be:
 - **auditable**: what ran, where, when, and with what result
 - **safe to rerun**: resume after a failure, and never rerun a statement that already succeeded
 
-The options, simplest first, are a DDL notebook someone runs by hand (with no record of what ran where), a **manifest plus a runner job** (this section), tables owned by a declarative pipeline, or a migration tool such as Flyway, Liquibase or Terraform.
+The options, simplest first, are a DDL notebook someone runs by hand (with no record of what ran where), a **manifest plus a runner job** (this section), or tables owned by a declarative pipeline.
 
 ### The pieces
 
@@ -811,7 +809,7 @@ resources/job_sql_release.yml                # the runner as a job (manual trigg
 <catalog>.<schema>.log_sql_release           # audit table the runner maintains
 ```
 
-The **DDL files** are plain SQL, one object per file. `{catalog}` and `{schema}` are placeholders the runner fills in per environment:
+The **DDL files** are plain SQL, one object per file. `{catalog}` and `{schema}` are placeholders the runner fills in per environment. Here is the predictions table:
 
 ```sql
 CREATE TABLE IF NOT EXISTS {catalog}.{schema}.taxi_predictions (
@@ -825,7 +823,7 @@ CREATE TABLE IF NOT EXISTS {catalog}.{schema}.taxi_predictions (
 COMMENT 'Fare predictions, one row per trip per batch. Rewritten idempotently per batch_id by the predict pipeline.';
 ```
 
-The same column list also lives in Python (`settings.PREDICTION_TABLE_COLUMNS`), because the pipelines build DataFrames against it. A small **contract test** parses the DDL and asserts the two lists match, in order, so they can't drift.
+Each column has a name, a type and a comment, and the table has a comment of its own. The comments show up in Catalog Explorer, so the table documents itself where people look at the data. `IF NOT EXISTS` makes the statement do nothing when the table already exists, which is what makes it safe to run twice. That property matters below.
 
 The **manifest** says what to run, in which order, under which release name:
 
@@ -842,7 +840,7 @@ The **runner** ([one Python file](https://github.com/hovinh/databricks-learning-
 
 ### What happens when you run a release
 
-![Fig09](images/fig09-sql-release-runner.svg){:data-width="700" data-height="650"}
+![Fig09](images/fig09-sql-release-runner.png){:data-width="1400" data-height="1300"}
 Fig. 9. One run of the SQL release runner. Each statement's identity is looked up in the audit history and classified as SKIP, RETRY or NEW. A dry run stops after printing the plan. A real run pre-logs new statements, executes until the first failure, writes the final statuses back, and raises if anything failed, so the next run resumes from that statement.
 {:.figure}
 
